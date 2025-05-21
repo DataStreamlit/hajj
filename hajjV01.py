@@ -78,7 +78,21 @@ def hospital_staff_movement(df):
 status_df, movement_df = hospital_staff_movement(editable_df)
 
 st.subheader("📋 حالة كل مستشفى")
-st.dataframe(status_df[["Hospital Name", "Current Physicians", "Visits in 30 Min", "Load", "Status", "Required Physicians", "Staff to Move"]])
+def highlight_status(val):
+    color = ""
+    if val == "Overloaded":
+        color = "red"
+    elif val == "Overstaffed":
+        color = "blue"
+    elif val == "Optimal":
+        color = "green"
+    return f"color: {color}; font-weight: bold"
+
+styled_df = status_df[["Hospital Name", "Current Physicians", "Visits in 30 Min", "Load", "Status", "Required Physicians", "Staff to Move"]].style.applymap(
+    highlight_status, subset=["Status"]
+)
+
+st.dataframe(styled_df)
 
 st.subheader("🚑 اقتراحات توزيع الكوادر الطبية")
 if not movement_df.empty:
